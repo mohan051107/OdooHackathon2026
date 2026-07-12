@@ -1,3 +1,5 @@
+package com.entity;
+
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
