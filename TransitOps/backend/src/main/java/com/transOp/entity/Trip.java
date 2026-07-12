@@ -1,6 +1,7 @@
-package com.entity;
-
+package com.transOp.entity;
 import javax.persistence.*;
+
+import java.sql.DriverAction;
 import java.time.LocalDateTime;
 
 @Entity
@@ -37,7 +38,7 @@ public class Trip {
     
     @ManyToOne
     @JoinColumn(name = "driver_id")
-    private Driver driver;
+    private DriverAction driver;
     
     @Column(nullable = false)
     private String status; // DRAFT, DISPATCHED, COMPLETED, CANCELLED
@@ -135,12 +136,12 @@ public class Trip {
         this.vehicle = vehicle;
     }
     
-    public Driver getDriver() {
+    public DriverAction getDriver() {
         return driver;
     }
     
-    public void setDriver(Driver driver) {
-        this.driver = driver;
+    public void setDriver1(Driver driver2) {
+        this.driver = (DriverAction) driver2;
     }
     
     public String getStatus() {
@@ -193,7 +194,12 @@ public class Trip {
                 ", cargoWeight=" + cargoWeight +
                 ", status='" + status + '\'' +
                 ", vehicle=" + (vehicle != null ? vehicle.getRegistrationNumber() : "null") +
-                ", driver=" + (driver != null ? driver.getName() : "null") +
+                ", driver=" + (driver != null ? ((Vehicle) driver).getName() : "null") +
                 '}';
+    }
+
+    public void setDriver(Driver driver2) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'setDriver'");
     }
 }

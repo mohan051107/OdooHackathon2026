@@ -1,21 +1,24 @@
-package com.service;
+package com.transOp.service;
 
-import com.dto.LoginRequest;
-import com.dto.LoginResponse;
-import com.entity.User;
-import com.repository.UserRepository;
-import com.util.JwtUtil;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.transOp.dto.LoginRequest;
+import com.transOp.dto.LoginResponse;
+import com.transOp.entity.User;
+import com.transOp.repository.UserRepository;
+import com.transOp.util.JwtUtil;
+
 import org.springframework.stereotype.Service;
 
 @Service
 public class AuthService {
     
-    @Autowired
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
     
-    @Autowired
-    private JwtUtil jwtUtil;
+    private final JwtUtil jwtUtil;
+
+    AuthService(UserRepository userRepository, JwtUtil jwtUtil) {
+        this.userRepository = userRepository;
+        this.jwtUtil = jwtUtil;
+    }
     
     /**
      * Login user

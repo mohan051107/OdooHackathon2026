@@ -1,4 +1,4 @@
-package com.dto;
+package com.transOp.dto;
 
 public class LoginRequest {
     private String email;

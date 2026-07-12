@@ -1,4 +1,4 @@
-package com.entity;
+package com.transOp.entity;
 
 import javax.persistence.*;
 import java.time.LocalDate;

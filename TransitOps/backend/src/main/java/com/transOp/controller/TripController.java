@@ -1,7 +1,8 @@
-package com.controller;
+package com.transOp.controller;
 
-import com.entity.Trip;
-import com.service.TripService;
+import com.transOp.entity.Trip;
+import com.transOp.service.TripService;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

@@ -1,4 +1,4 @@
-package com.dto;
+package com.transOp.dto;
 
 public class LoginResponse {
     private boolean success;

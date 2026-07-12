@@ -1,9 +1,10 @@
-package com.controller;
+package com.transOp.controller;
 
-import com.dto.LoginRequest;
-import com.dto.LoginResponse;
-import com.service.AuthService;
-import com.util.JwtUtil;
+import com.transOp.dto.LoginRequest;
+import com.transOp.dto.LoginResponse;
+import com.transOp.service.AuthService;
+import com.transOp.util.JwtUtil;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

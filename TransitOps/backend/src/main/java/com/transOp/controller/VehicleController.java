@@ -1,7 +1,8 @@
-package com.controller;
+package com.transOp.controller;
 
-import com.entity.Vehicle;
-import com.service.VehicleService;
+import com.transOp.entity.Vehicle;
+import com.transOp.service.VehicleService;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

@@ -1,6 +1,5 @@
-package com.util;
+package com.transOp.util;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.sql.DataSource;
@@ -10,8 +9,11 @@ import java.sql.SQLException;
 @Component
 public class DatabaseUtil {
     
-    @Autowired
-    private DataSource dataSource;
+    private final DataSource dataSource;
+
+    DatabaseUtil(DataSource dataSource) {
+        this.dataSource = dataSource;
+    }
     
     /**
      * Get a database connection
