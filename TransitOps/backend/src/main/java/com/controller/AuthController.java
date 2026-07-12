@@ -4,21 +4,23 @@ import com.dto.LoginRequest;
 import com.dto.LoginResponse;
 import com.service.AuthService;
 import com.util.JwtUtil;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/auth")
+@RequestMapping("/api/auth")
 @CrossOrigin(origins = "*")
 public class AuthController {
     
-    @Autowired
-    private AuthService authService;
+    private final AuthService authService;
     
-    @Autowired
-    private JwtUtil jwtUtil;
+    private final JwtUtil jwtUtil;
+
+    AuthController(AuthService authService, JwtUtil jwtUtil) {
+        this.authService = authService;
+        this.jwtUtil = jwtUtil;
+    }
     
     /**
      * Login endpoint - Authenticates user and returns JWT token
