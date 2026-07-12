@@ -4,161 +4,99 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>TransitOps · Drivers</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
-    <link rel="stylesheet" href="style.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <link rel="stylesheet" href="css/dashboard.css" />
 </head>
 <body>
-    <aside class="sidebar">
-        <div class="sidebar-brand"><i class="fas fa-truck"></i> TransitOps</div>
-        <nav>
-            <a href="dashboard.html" class="nav-item"><i class="fas fa-chart-pie"></i> Dashboard</a>
-            <a href="vehicles.html" class="nav-item"><i class="fas fa-vehicle"></i> Vehicles</a>
-            <a href="drivers.html" class="nav-item active"><i class="fas fa-id-card"></i> Drivers</a>
-            <a href="trips.html" class="nav-item"><i class="fas fa-route"></i> Trips</a>
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-brand">
+            <div class="brand-icon"><i class="fas fa-bus"></i></div>
+            <span class="brand-text">TransitOps</span>
+            <button class="sidebar-toggle" id="sidebarToggle">
+                <i class="fas fa-chevron-left"></i>
+            </button>
+        </div>
+        <nav class="sidebar-nav">
+            <a href="dashboard.html" class="nav-item"><i class="fas fa-chart-pie"></i><span>Dashboard</span></a>
+            <a href="vehicles.html" class="nav-item"><i class="fas fa-truck"></i><span>Vehicles</span><span class="nav-badge">12</span></a>
+            <a href="drivers.html" class="nav-item active"><i class="fas fa-users"></i><span>Drivers</span><span class="nav-badge">8</span></a>
+            <a href="trips.html" class="nav-item"><i class="fas fa-route"></i><span>Trips</span><span class="nav-badge">24</span></a>
+            <a href="maintenance.html" class="nav-item"><i class="fas fa-tools"></i><span>Maintenance</span><span class="nav-badge warning">3</span></a>
+            <a href="analytics.html" class="nav-item"><i class="fas fa-chart-line"></i><span>Analytics</span></a>
+            <a href="settings.html" class="nav-item"><i class="fas fa-cog"></i><span>Settings</span></a>
         </nav>
         <div class="sidebar-footer">
-            <i class="fas fa-shield-alt"></i>
-            <span id="sidebarUser">Fleet Manager</span>
+            <div class="user-card">
+                <img src="https://ui-avatars.com/api/?name=John+Administrator&background=2d4059&color=fff&size=50" alt="User" />
+                <div class="user-info">
+                    <p class="user-name" id="userName">John Admin</p>
+                    <p class="user-role">Operations Manager</p>
+                </div>
+                <button class="logout-btn" onclick="handleLogout()" title="Logout">
+                    <i class="fas fa-sign-out-alt"></i>
+                </button>
+            </div>
         </div>
     </aside>
 
-    <main class="main">
-        <div class="top-bar">
-            <div class="page-title">
-                <h1>Driver Registry</h1>
-                <span>manage your driver profiles</span>
+    <main class="main-content">
+        <header class="top-header">
+            <div>
+                <h1 class="page-title">👤 Driver Management</h1>
+                <p class="page-subtitle">Manage your driver workforce</p>
             </div>
-            <div class="user-profile">
-                <i class="fas fa-user-circle"></i>
-                <span id="userName">Fleet Manager</span>
-                <span class="badge-role"><i class="fas fa-key"></i> <span id="userRole">Admin</span></span>
+            <div class="header-right">
+                <div class="date-display"><i class="far fa-calendar-alt"></i><span></span></div>
+                <div class="header-actions">
+                    <button class="btn-icon" onclick="showToast('📬 You have 3 new notifications', 'info')">
+                        <i class="fas fa-bell"></i><span class="notification-dot"></span>
+                    </button>
+                    <button class="btn-primary" onclick="showToast('👤 Add new driver form opened', 'success')">
+                        <i class="fas fa-plus"></i> Add Driver
+                    </button>
+                </div>
             </div>
+        </header>
+
+        <div class="stats-grid">
+            <div class="stat-card"><div class="stat-number" id="totalDriversStat">0</div><div class="stat-label">Total Drivers</div></div>
+            <div class="stat-card"><div class="stat-number" id="onlineDriversStat">0</div><div class="stat-label">Online</div></div>
+            <div class="stat-card"><div class="stat-number" id="onTripDriversStat">0</div><div class="stat-label">On Trip</div></div>
+            <div class="stat-card"><div class="stat-number" id="offlineDriversStat">0</div><div class="stat-label">Offline</div></div>
         </div>
 
-        <div class="stats-grid" id="statsGrid">
-            <div class="stat-card"><div class="stat-label">Total</div><div class="stat-value" id="statTotal">0</div></div>
-            <div class="stat-card"><div class="stat-label">Available</div><div class="stat-value" id="statAvailable">0 <span class="stat-icon"><i class="fas fa-check-circle" style="color:#0b6e4f;"></i></span></div></div>
-            <div class="stat-card"><div class="stat-label">On Trip</div><div class="stat-value" id="statOnTrip">0 <span class="stat-icon"><i class="fas fa-route" style="color:#8b6200;"></i></span></div></div>
-            <div class="stat-card"><div class="stat-label">Off Duty</div><div class="stat-value" id="statOffDuty">0 <span class="stat-icon"><i class="fas fa-clock" style="color:#4e667c;"></i></span></div></div>
-            <div class="stat-card"><div class="stat-label">Suspended</div><div class="stat-value" id="statSuspended">0 <span class="stat-icon"><i class="fas fa-ban" style="color:#ac3f32;"></i></span></div></div>
-        </div>
-
-        <div class="toolbar">
-            <div class="search-wrap">
-                <i class="fas fa-search"></i>
-                <input type="text" id="searchInput" placeholder="Search by name, license, or contact…">
+        <div class="card">
+            <div class="card-header">
+                <h3><i class="fas fa-users"></i> All Drivers</h3>
+                <div class="filter-bar">
+                    <input type="text" id="driverSearch" placeholder="Search drivers..." onkeyup="filterDrivers()" />
+                    <select id="driverStatusFilter" onchange="filterDrivers()">
+                        <option value="all">All Status</option>
+                        <option value="online">Online</option>
+                        <option value="offline">Offline</option>
+                        <option value="on-trip">On Trip</option>
+                    </select>
+                </div>
             </div>
-            <div class="filter-group">
-                <label><i class="fas fa-filter"></i></label>
-                <select id="filterStatus">
-                    <option value="all">All Status</option>
-                    <option value="available">Available</option>
-                    <option value="ontrip">On Trip</option>
-                    <option value="offduty">Off Duty</option>
-                    <option value="suspended">Suspended</option>
-                </select>
-            </div>
-            <div class="filter-group">
-                <select id="filterCategory">
-                    <option value="all">All Categories</option>
-                    <option value="A">Category A</option>
-                    <option value="B">Category B</option>
-                    <option value="C">Category C</option>
-                    <option value="D">Category D</option>
-                </select>
-            </div>
-            <button class="btn-primary" id="addDriverBtn"><i class="fas fa-plus"></i> Add Driver</button>
-        </div>
-
-        <div class="section-card">
-            <div class="table-wrap">
+            <div class="table-wrapper">
                 <table>
                     <thead>
-                        <tr>
-                            <th>Name</th>
-                            <th>License</th>
-                            <th>Category</th>
-                            <th>Expiry</th>
-                            <th>Contact</th>
-                            <th>Score</th>
-                            <th>Status</th>
-                            <th style="text-align:right;">Actions</th>
-                        </tr>
+                        <tr><th>ID</th><th>Name</th><th>Vehicle</th><th>Status</th><th>Phone</th><th>Action</th></tr>
                     </thead>
-                    <tbody id="driverTableBody"></tbody>
+                    <tbody id="driversTableBody"></tbody>
                 </table>
             </div>
-            <div id="emptyState" class="empty-state" style="display:none;">
-                <i class="fas fa-user-slash"></i>
-                <p>No drivers found. Click <strong>Add Driver</strong> to register a new driver.</p>
-            </div>
         </div>
+
+        <footer class="dashboard-footer">
+            <span>&copy; 2026 TransitOps - Fleet Management System</span>
+            <span class="footer-divider">|</span>
+            <span><i class="fas fa-circle" style="color: #22c55e; font-size: 8px;"></i> All systems operational</span>
+        </footer>
     </main>
 
-    <div class="toast" id="toast"></div>
-
-    <div class="modal-overlay" id="modalOverlay">
-        <div class="modal-box">
-            <h3 id="modalTitle">Register Driver</h3>
-            <p class="modal-sub" id="modalSub">Enter the driver details below.</p>
-            <form id="driverForm" novalidate>
-                <input type="hidden" id="editId" value="">
-                <div class="form-group">
-                    <label>Full Name <span class="required">*</span></label>
-                    <input type="text" id="fName" placeholder="e.g. Alex Rodriguez" required>
-                </div>
-                <div class="form-row">
-                    <div class="form-group">
-                        <label>License Number <span class="required">*</span></label>
-                        <input type="text" id="fLicense" placeholder="DL-123456" required>
-                        <div class="validation-error" id="licenseError">This license number is already in use.</div>
-                    </div>
-                    <div class="form-group">
-                        <label>License Category <span class="required">*</span></label>
-                        <select id="fCategory" required>
-                            <option value="A">Category A</option>
-                            <option value="B">Category B</option>
-                            <option value="C">Category C</option>
-                            <option value="D">Category D</option>
-                        </select>
-                    </div>
-                </div>
-                <div class="form-row">
-                    <div class="form-group">
-                        <label>License Expiry <span class="required">*</span></label>
-                        <input type="date" id="fExpiry" required>
-                    </div>
-                    <div class="form-group">
-                        <label>Contact Number <span class="required">*</span></label>
-                        <input type="text" id="fContact" placeholder="+1 555-123-4567" required>
-                    </div>
-                </div>
-                <div class="form-row">
-                    <div class="form-group">
-                        <label>Safety Score</label>
-                        <input type="number" id="fScore" placeholder="e.g. 85" min="0" max="100" value="100">
-                    </div>
-                    <div class="form-group">
-                        <label>Status</label>
-                        <select id="fStatus">
-                            <option value="available">Available</option>
-                            <option value="ontrip">On Trip</option>
-                            <option value="offduty">Off Duty</option>
-                            <option value="suspended">Suspended</option>
-                        </select>
-                    </div>
-                </div>
-                <div class="btn-row">
-                    <button type="button" class="btn-secondary-modal" id="cancelModalBtn">Cancel</button>
-                    <button type="submit" class="btn-primary-modal" id="modalSaveBtn">Save Driver</button>
-                </div>
-            </form>
-        </div>
-    </div>
-
+    <script src="js/dashboard.js"></script>
     <script src="js/drivers.js"></script>
 </body>
 </html>
