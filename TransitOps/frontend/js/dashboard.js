@@ -277,13 +277,29 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    function setupNavigation() {
+    // 🔥 UPDATED: Combined navigation function with page handling
+    function setupPageNavigation() {
         const navItems = document.querySelectorAll('.nav-item');
         navItems.forEach(item => {
             item.addEventListener('click', function(e) {
-                e.preventDefault();
-                navItems.forEach(n => n.classList.remove('active'));
-                this.classList.add('active');
+                // Get the page from data attribute or text content
+                const page = this.dataset.page || this.querySelector('span')?.textContent?.toLowerCase() || 'page';
+                
+                // Check if it has a valid href that's not '#'
+                const href = this.getAttribute('href');
+                if (href && href !== '#' && href !== '') {
+                    // Navigate to actual page
+                    window.location.href = href;
+                } else {
+                    // Handle in-app navigation
+                    e.preventDefault();
+                    navItems.forEach(n => n.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    // Show toast notification
+                    const pageName = this.querySelector('span')?.textContent || page;
+                    showToast(`📊 Navigating to ${pageName}`, 'info');
+                }
             });
         });
     }
@@ -400,7 +416,7 @@ document.addEventListener('DOMContentLoaded', function() {
         initChart();
         setupChartPeriodSwitch();
         setupSidebarToggle();
-        setupNavigation();
+        setupPageNavigation(); // 🔥 UPDATED: Using the combined navigation
         setupQuickActions();
         setupNotifications();
         startAutoRefresh();
