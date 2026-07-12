@@ -7,838 +7,303 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        body {
-            font-family: 'Inter', sans-serif;
-            background: #f6f9fc;
-            display: flex;
-            color: #0b1a2e;
-        }
-        .sidebar {
-            width: 280px;
-            min-height: 100vh;
-            background: #0b1a2e;
-            color: #cbd5e1;
-            display: flex;
-            flex-direction: column;
-            position: sticky;
-            top: 0;
-            height: 100vh;
-            overflow-y: auto;
-            transition: width 0.2s;
-            flex-shrink: 0;
-            box-shadow: 2px 0 12px rgba(0,0,0,0.06);
-        }
-        .sidebar-brand {
-            display: flex;
-            align-items: center;
-            padding: 28px 22px 20px;
-            gap: 12px;
-            border-bottom: 1px solid #1e3347;
-        }
-        .brand-icon {
-            background: #2563eb;
-            width: 40px;
-            height: 40px;
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-size: 20px;
-        }
-        .brand-text {
-            font-weight: 700;
-            font-size: 22px;
-            letter-spacing: -0.3px;
-            color: white;
-        }
-        .sidebar-toggle {
-            margin-left: auto;
-            background: transparent;
-            border: none;
-            color: #94a3b8;
-            cursor: pointer;
-            font-size: 16px;
-            padding: 4px 8px;
-            border-radius: 6px;
-            transition: 0.2s;
-        }
-        .sidebar-toggle:hover { background: #1e3347; color: white; }
-        .sidebar-nav {
-            padding: 24px 14px;
-            flex: 1;
-        }
-        .nav-item {
-            display: flex;
-            align-items: center;
-            gap: 14px;
-            padding: 12px 16px;
-            border-radius: 12px;
-            color: #94a3b8;
-            text-decoration: none;
-            font-weight: 500;
-            font-size: 15px;
-            transition: 0.15s;
-            margin-bottom: 4px;
-            position: relative;
-        }
-        .nav-item i { width: 22px; font-size: 18px; }
-        .nav-item:hover { background: #1e3347; color: white; }
-        .nav-item.active {
-            background: #1e3347;
-            color: white;
-            box-shadow: inset 3px 0 0 #2563eb;
-        }
-        .nav-badge {
-            margin-left: auto;
-            background: #2563eb;
-            color: white;
-            font-size: 11px;
-            font-weight: 600;
-            padding: 2px 10px;
-            border-radius: 30px;
-        }
-        .nav-badge.warning { background: #eab308; color: #0b1a2e; }
-        .sidebar-footer {
-            padding: 18px 16px 24px;
-            border-top: 1px solid #1e3347;
-        }
-        .user-card {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-        .user-card img {
-            width: 42px;
-            height: 42px;
-            border-radius: 40px;
-            object-fit: cover;
-            border: 2px solid #2d4059;
-        }
-        .user-info {
-            flex: 1;
-        }
-        .user-name {
-            font-weight: 600;
-            color: white;
-            font-size: 14px;
-        }
-        .user-role {
-            font-size: 12px;
-            color: #94a3b8;
-        }
-        .logout-btn {
-            background: transparent;
-            border: none;
-            color: #64748b;
-            font-size: 18px;
-            cursor: pointer;
-            padding: 6px 8px;
-            border-radius: 8px;
-            transition: 0.2s;
-        }
-        .logout-btn:hover { background: #1e3347; color: white; }
-        .main-content {
-            flex: 1;
-            padding: 24px 32px 20px;
-            overflow-x: auto;
-        }
-        .top-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            flex-wrap: wrap;
-            gap: 16px 24px;
-            margin-bottom: 28px;
-        }
-        .page-title {
-            font-size: 28px;
-            font-weight: 700;
-            color: #0b1a2e;
-            letter-spacing: -0.5px;
-        }
-        .page-subtitle {
-            color: #475569;
-            font-weight: 400;
-            font-size: 15px;
-            margin-top: 4px;
-        }
-        .header-right {
-            display: flex;
-            align-items: center;
-            gap: 18px;
-            flex-wrap: wrap;
-        }
-        .date-display {
-            background: white;
-            padding: 8px 16px;
-            border-radius: 40px;
-            font-size: 14px;
-            font-weight: 500;
-            color: #1e293b;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.02);
-            border: 1px solid #e9edf2;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-        .header-actions {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            flex-wrap: wrap;
-        }
-        .btn-icon {
-            background: white;
-            border: 1px solid #e9edf2;
-            border-radius: 40px;
-            width: 42px;
-            height: 42px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #1e293b;
-            font-size: 18px;
-            cursor: pointer;
-            transition: 0.15s;
-            position: relative;
-        }
-        .btn-icon:hover { background: #f1f5f9; border-color: #cbd5e1; }
-        .notification-dot {
-            width: 10px;
-            height: 10px;
-            background: #ef4444;
-            border-radius: 30px;
-            position: absolute;
-            top: 6px;
-            right: 6px;
-            border: 2px solid white;
-        }
-        .btn-primary {
-            background: #2563eb;
-            border: none;
-            padding: 0 22px;
-            height: 42px;
-            border-radius: 40px;
-            color: white;
-            font-weight: 600;
-            font-size: 14px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            cursor: pointer;
-            transition: 0.15s;
-        }
-        .btn-primary:hover { background: #1d4ed8; }
-        .btn-outline {
-            background: transparent;
-            border: 1px solid #cbd5e1;
-            padding: 0 20px;
-            height: 42px;
-            border-radius: 40px;
-            font-weight: 500;
-            font-size: 14px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            cursor: pointer;
-            transition: 0.15s;
-            color: #1e293b;
-        }
-        .btn-outline:hover { background: #f1f5f9; }
-        .kpi-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-            gap: 18px;
-            margin-bottom: 28px;
-        }
-        .kpi-card {
-            background: white;
-            border-radius: 20px;
-            padding: 18px 20px;
-            display: flex;
-            align-items: center;
-            gap: 14px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.02);
-            border: 1px solid #edf2f7;
-            transition: 0.2s;
-        }
-        .kpi-card:hover { border-color: #cbd5e1; }
-        .kpi-icon {
-            width: 48px;
-            height: 48px;
-            border-radius: 16px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 22px;
-            color: white;
-            flex-shrink: 0;
-        }
-        .kpi-icon.blue { background: #2563eb; }
-        .kpi-icon.green { background: #16a34a; }
-        .kpi-icon.orange { background: #f59e0b; }
-        .kpi-icon.purple { background: #8b5cf6; }
-        .kpi-icon.red { background: #ef4444; }
-        .kpi-icon.teal { background: #14b8a6; }
-        .kpi-content { flex: 1; }
-        .kpi-label {
-            font-size: 13px;
-            font-weight: 500;
-            color: #64748b;
-            letter-spacing: 0.2px;
-        }
-        .kpi-value-group {
-            display: flex;
-            align-items: baseline;
-            gap: 12px;
-            flex-wrap: wrap;
-        }
-        .kpi-value {
-            font-size: 26px;
-            font-weight: 700;
-            color: #0b1a2e;
-            letter-spacing: -0.5px;
-        }
-        .kpi-change {
-            font-size: 12px;
-            font-weight: 600;
-            padding: 2px 10px;
-            border-radius: 30px;
-            background: #dcfce7;
-            color: #15803d;
-        }
-        .kpi-change.negative { background: #fee2e2; color: #b91c1c; }
-        .kpi-change i { font-size: 10px; }
-        .dashboard-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 24px;
-            margin-bottom: 28px;
-        }
-        .card {
-            background: white;
-            border-radius: 24px;
-            padding: 20px 22px 24px;
-            border: 1px solid #edf2f7;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.02);
-        }
-        .card-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 18px;
-        }
-        .card-header h3 {
-            font-size: 17px;
-            font-weight: 600;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            color: #0b1a2e;
-        }
-        .card-subtitle {
-            font-size: 13px;
-            font-weight: 400;
-            color: #64748b;
-            margin-left: 6px;
-        }
-        .card-actions { display: flex; gap: 6px; }
-        .btn-sm {
-            background: transparent;
-            border: 1px solid transparent;
-            padding: 4px 14px;
-            border-radius: 30px;
-            font-size: 12px;
-            font-weight: 500;
-            color: #475569;
-            cursor: pointer;
-            transition: 0.1s;
-        }
-        .btn-sm.active {
-            background: #2563eb;
-            color: white;
-            border-color: #2563eb;
-        }
-        .btn-sm:hover:not(.active) { background: #f1f5f9; }
-        .link-more {
-            font-size: 13px;
-            font-weight: 500;
-            color: #2563eb;
-            text-decoration: none;
-            display: flex;
-            align-items: center;
-            gap: 4px;
-        }
-        .link-more i { font-size: 12px; }
-        .live-badge {
-            background: #dcfce7;
-            color: #15803d;
-            font-size: 11px;
-            font-weight: 700;
-            padding: 4px 14px;
-            border-radius: 40px;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-        .pulse-dot {
-            width: 8px;
-            height: 8px;
-            background: #22c55e;
-            border-radius: 30px;
-            display: inline-block;
-            animation: pulse 1.4s infinite;
-        }
-        @keyframes pulse { 0% { opacity: 0.4; } 50% { opacity: 1; } 100% { opacity: 0.4; } }
-        .chart-container { height: 200px; }
-        .table-wrapper { overflow-x: auto; }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            font-size: 14px;
-        }
-        th {
-            text-align: left;
-            padding: 12px 6px 8px 0;
-            font-weight: 600;
-            color: #475569;
-            border-bottom: 1px solid #e9edf2;
-        }
-        td {
-            padding: 12px 6px 12px 0;
-            border-bottom: 1px solid #f1f5f9;
-            color: #1e293b;
-        }
-        .status-badge {
-            display: inline-block;
-            padding: 2px 14px;
-            border-radius: 40px;
-            font-size: 12px;
-            font-weight: 600;
-            background: #e9edf2;
-            color: #334155;
-        }
-        .status-badge.active { background: #dcfce7; color: #15803d; }
-        .status-badge.pending { background: #fef9c3; color: #854d0e; }
-        .status-badge.completed { background: #e0f2fe; color: #0369a1; }
-        .btn-table {
-            background: transparent;
-            border: none;
-            color: #2563eb;
-            font-weight: 500;
-            font-size: 13px;
-            cursor: pointer;
-            padding: 2px 8px;
-        }
-        .btn-table:hover { text-decoration: underline; }
-        .driver-list-container {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-            margin-top: 4px;
-        }
-        .driver-item {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            padding: 6px 4px;
-            border-radius: 12px;
-        }
-        .driver-item img {
-            width: 38px;
-            height: 38px;
-            border-radius: 40px;
-            object-fit: cover;
-        }
-        .driver-item .info { flex: 1; }
-        .driver-item .name {
-            font-weight: 600;
-            font-size: 14px;
-        }
-        .driver-item .status-text {
-            font-size: 12px;
-            color: #64748b;
-        }
-        .driver-status-dot {
-            width: 10px;
-            height: 10px;
-            border-radius: 30px;
-            display: inline-block;
-            margin-right: 6px;
-        }
-        .driver-status-dot.online { background: #22c55e; }
-        .driver-status-dot.offline { background: #94a3b8; }
-        .driver-status-dot.away { background: #f59e0b; }
-        .utilization-bars { display: flex; flex-direction: column; gap: 12px; }
-        .util-item {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-        .util-item .label {
-            width: 70px;
-            font-weight: 500;
-            font-size: 13px;
-            color: #334155;
-        }
-        .util-track {
-            flex: 1;
-            height: 8px;
-            background: #e9edf2;
-            border-radius: 20px;
-            overflow: hidden;
-        }
-        .util-fill {
-            height: 100%;
-            border-radius: 20px;
-            background: #2563eb;
-        }
-        .util-fill.high { background: #2563eb; }
-        .util-fill.medium { background: #f59e0b; }
-        .util-fill.low { background: #22c55e; }
-        .util-item .perc {
-            font-weight: 600;
-            font-size: 13px;
-            width: 40px;
-            text-align: right;
-        }
-        .bottom-section {
-            display: grid;
-            grid-template-columns: 2fr 1fr;
-            gap: 24px;
-            margin-bottom: 24px;
-        }
-        .maintenance-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 14px;
-        }
-        .maintenance-item {
-            background: #f8fafc;
-            border-radius: 16px;
-            padding: 12px 14px;
-            border-left: 4px solid #2563eb;
-        }
-        .maintenance-item .title {
-            font-weight: 600;
-            font-size: 14px;
-        }
-        .maintenance-item .desc {
-            font-size: 12px;
-            color: #475569;
-            margin-top: 2px;
-        }
-        .maintenance-item .date {
-            font-size: 11px;
-            color: #64748b;
-            margin-top: 6px;
-        }
-        .quick-actions-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 12px;
-            margin-top: 6px;
-        }
-        .quick-action-btn {
-            background: #f8fafc;
-            border: 1px solid #e9edf2;
-            border-radius: 16px;
-            padding: 16px 8px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 6px;
-            font-weight: 500;
-            font-size: 13px;
-            color: #0b1a2e;
-            cursor: pointer;
-            transition: 0.15s;
-        }
-        .quick-action-btn i { font-size: 22px; color: #2563eb; }
-        .quick-action-btn:hover { background: #f1f5f9; border-color: #cbd5e1; }
-        .dashboard-footer {
-            margin-top: 28px;
-            font-size: 13px;
-            color: #64748b;
-            display: flex;
-            gap: 16px;
-            flex-wrap: wrap;
-            border-top: 1px solid #e9edf2;
-            padding-top: 20px;
-        }
-        .footer-divider { color: #cbd5e1; }
-        @media (max-width: 1000px) {
-            .dashboard-grid { grid-template-columns: 1fr; }
-            .bottom-section { grid-template-columns: 1fr; }
-            .sidebar { width: 80px; }
-            .sidebar .brand-text, .sidebar .nav-item span, .sidebar .user-info, .sidebar .nav-badge, .sidebar .sidebar-toggle i { display: none; }
-            .sidebar .nav-item { justify-content: center; padding: 12px; }
-            .sidebar .brand-icon { margin: 0 auto; }
-            .sidebar-footer .user-card { justify-content: center; }
-            .main-content { padding: 20px 16px; }
-        }
-        @media (max-width: 600px) {
-            .kpi-grid { grid-template-columns: 1fr 1fr; }
-            .header-actions .btn-outline { display: none; }
-            .top-header { flex-direction: column; }
-        }
-        .chart-container canvas { max-height: 200px; width: 100% !important; }
-    </style>
+    <link rel="stylesheet" href="dashboard.css" />
 </head>
 <body>
-<aside class="sidebar" id="sidebar">
-    <div class="sidebar-brand">
-        <div class="brand-icon"><i class="fas fa-bus"></i></div>
-        <span class="brand-text">TransitOps</span>
-        <button class="sidebar-toggle" id="sidebarToggle"><i class="fas fa-chevron-left"></i></button>
-    </div>
-    <nav class="sidebar-nav">
-        <a href="#" class="nav-item active"><i class="fas fa-chart-pie"></i><span>Dashboard</span></a>
-        <a href="#" class="nav-item"><i class="fas fa-truck"></i><span>Vehicles</span><span class="nav-badge">12</span></a>
-        <a href="#" class="nav-item"><i class="fas fa-users"></i><span>Drivers</span><span class="nav-badge">8</span></a>
-        <a href="#" class="nav-item"><i class="fas fa-route"></i><span>Trips</span><span class="nav-badge">24</span></a>
-        <a href="#" class="nav-item"><i class="fas fa-tools"></i><span>Maintenance</span><span class="nav-badge warning">3</span></a>
-        <a href="#" class="nav-item"><i class="fas fa-chart-line"></i><span>Analytics</span></a>
-        <a href="#" class="nav-item"><i class="fas fa-cog"></i><span>Settings</span></a>
-    </nav>
-    <div class="sidebar-footer">
-        <div class="user-card">
-            <img src="https://ui-avatars.com/api/?name=John+Administrator&background=2d4059&color=fff&size=50" alt="User" />
-            <div class="user-info"><p class="user-name">John Admin</p><p class="user-role">Operations Manager</p></div>
-            <button class="logout-btn"><i class="fas fa-sign-out-alt"></i></button>
-        </div>
-    </div>
-</aside>
-
-<main class="main-content">
-    <header class="top-header">
-        <div><h1 class="page-title">Dashboard</h1><p class="page-subtitle">Real-time fleet overview &amp; analytics</p></div>
-        <div class="header-right">
-            <div class="date-display"><i class="far fa-calendar-alt"></i><span id="currentDate">Loading...</span></div>
-            <div class="header-actions">
-                <button class="btn-icon"><i class="fas fa-bell"></i><span class="notification-dot"></span></button>
-                <button class="btn-icon"><i class="fas fa-envelope"></i></button>
-                <button class="btn-primary"><i class="fas fa-plus"></i> New Trip</button>
-                <button class="btn-outline"><i class="fas fa-download"></i> Export</button>
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-brand">
+            <div class="brand-icon">
+                <i class="fas fa-bus"></i>
             </div>
+            <span class="brand-text">TransitOps</span>
+            <button class="sidebar-toggle" id="sidebarToggle">
+                <i class="fas fa-chevron-left"></i>
+            </button>
         </div>
-    </header>
 
-    <section class="kpi-grid">
-        <div class="kpi-card"><div class="kpi-icon blue"><i class="fas fa-route"></i></div><div class="kpi-content"><span class="kpi-label">Active Trips</span><div class="kpi-value-group"><span class="kpi-value" id="activeTrips">0</span><span class="kpi-change positive"><i class="fas fa-arrow-up"></i> 12%</span></div></div></div>
-        <div class="kpi-card"><div class="kpi-icon green"><i class="fas fa-truck"></i></div><div class="kpi-content"><span class="kpi-label">Total Vehicles</span><div class="kpi-value-group"><span class="kpi-value" id="totalVehicles">0</span><span class="kpi-change positive"><i class="fas fa-arrow-up"></i> 5%</span></div></div></div>
-        <div class="kpi-card"><div class="kpi-icon orange"><i class="fas fa-user-check"></i></div><div class="kpi-content"><span class="kpi-label">Active Drivers</span><div class="kpi-value-group"><span class="kpi-value" id="activeDrivers">0</span><span class="kpi-change positive"><i class="fas fa-arrow-up"></i> 8%</span></div></div></div>
-        <div class="kpi-card"><div class="kpi-icon purple"><i class="fas fa-clock"></i></div><div class="kpi-content"><span class="kpi-label">On-Time Performance</span><div class="kpi-value-group"><span class="kpi-value" id="ontimePerformance">0%</span><span class="kpi-change positive"><i class="fas fa-arrow-up"></i> 3%</span></div></div></div>
-        <div class="kpi-card"><div class="kpi-icon red"><i class="fas fa-exclamation-triangle"></i></div><div class="kpi-content"><span class="kpi-label">Maintenance Alerts</span><div class="kpi-value-group"><span class="kpi-value" id="maintenanceAlerts">0</span><span class="kpi-change negative"><i class="fas fa-arrow-up"></i> 2</span></div></div></div>
-        <div class="kpi-card"><div class="kpi-icon teal"><i class="fas fa-gas-pump"></i></div><div class="kpi-content"><span class="kpi-label">Fuel Efficiency</span><div class="kpi-value-group"><span class="kpi-value" id="fuelEfficiency">0</span><span class="kpi-change positive"><i class="fas fa-arrow-up"></i> 4%</span></div></div></div>
-    </section>
+       <nav class="sidebar-nav">
+    <a href="dashboard.html" class="nav-item active" data-page="dashboard">
+        <i class="fas fa-chart-pie"></i>
+        <span>Dashboard</span>
+    </a>
+    <a href="vehicles.html" class="nav-item" data-page="vehicles">
+        <i class="fas fa-truck"></i>
+        <span>Vehicles</span>
+        <span class="nav-badge">12</span>
+    </a>
+    <a href="drivers.html" class="nav-item" data-page="drivers">
+        <i class="fas fa-users"></i>
+        <span>Drivers</span>
+        <span class="nav-badge">8</span>
+    </a>
+    <a href="trips.html" class="nav-item" data-page="trips">
+        <i class="fas fa-route"></i>
+        <span>Trips</span>
+        <span class="nav-badge">24</span>
+    </a>
+    <a href="maintenance.html" class="nav-item" data-page="maintenance">
+        <i class="fas fa-tools"></i>
+        <span>Maintenance</span>
+        <span class="nav-badge warning">3</span>
+    </a>
+    <a href="analytics.html" class="nav-item" data-page="analytics">
+        <i class="fas fa-chart-line"></i>
+        <span>Analytics</span>
+    </a>
+    <a href="settings.html" class="nav-item" data-page="settings">
+        <i class="fas fa-cog"></i>
+        <span>Settings</span>
+    </a>
+</nav>
 
-    <section class="dashboard-grid">
-        <div class="card chart-card">
-            <div class="card-header"><div><h3><i class="fas fa-chart-bar"></i> Trip Activity</h3><span class="card-subtitle">Last 7 days</span></div><div class="card-actions"><button class="btn-sm active" data-period="week">Week</button><button class="btn-sm" data-period="month">Month</button><button class="btn-sm" data-period="year">Year</button></div></div>
-            <div class="chart-container"><canvas id="tripChart"></canvas></div>
-        </div>
-        <div class="card table-card">
-            <div class="card-header"><div><h3><i class="fas fa-list-ul"></i> Recent Trips</h3><span class="card-subtitle">Latest 6 trips</span></div><a href="#" class="link-more">View All <i class="fas fa-arrow-right"></i></a></div>
-            <div class="table-wrapper"><table><thead><tr><th>Trip ID</th><th>Driver</th><th>Vehicle</th><th>Status</th><th>Action</th></tr></thead><tbody id="tripTableBody"></tbody></table></div>
-        </div>
-        <div class="card driver-card">
-            <div class="card-header"><div><h3><i class="fas fa-user-clock"></i> Driver Status</h3><span class="card-subtitle">Live updates</span></div><span class="live-badge"><span class="pulse-dot"></span> LIVE</span></div>
-            <div class="driver-list-container" id="driverStatusList"></div>
-        </div>
-        <div class="card utilization-card">
-            <div class="card-header"><div><h3><i class="fas fa-chart-simple"></i> Vehicle Utilization</h3><span class="card-subtitle">Current fleet usage</span></div></div>
-            <div class="utilization-bars" id="utilizationBars"></div>
-        </div>
-    </section>
-
-    <section class="bottom-section">
-        <div class="card maintenance-card">
-            <div class="card-header"><div><h3><i class="fas fa-toolbox"></i> Upcoming Maintenance</h3><span class="card-subtitle">Scheduled services</span></div><a href="#" class="link-more">View All <i class="fas fa-arrow-right"></i></a></div>
-            <div class="maintenance-grid" id="maintenanceGrid"></div>
-        </div>
-        <div class="card quick-actions-card">
-            <div class="card-header"><h3><i class="fas fa-bolt"></i> Quick Actions</h3></div>
-            <div class="quick-actions-grid">
-                <button class="quick-action-btn"><i class="fas fa-user-plus"></i><span>Add Driver</span></button>
-                <button class="quick-action-btn"><i class="fas fa-truck"></i><span>Add Vehicle</span></button>
-                <button class="quick-action-btn"><i class="fas fa-route"></i><span>Schedule Trip</span></button>
-                <button class="quick-action-btn"><i class="fas fa-file-alt"></i><span>Generate Report</span></button>
-            </div>
-        </div>
-    </section>
-
-    <footer class="dashboard-footer">
-        <span>&copy; 2026 TransitOps - Fleet Management System</span>
-        <span class="footer-divider">|</span>
-        <span><i class="fas fa-circle" style="color: #22c55e; font-size: 8px;"></i> All systems operational</span>
-        <span class="footer-divider">|</span>
-        <span>v2.4.1</span>
-    </footer>
-</main>
-
-<script>
-    (function(){
-        const dateSpan = document.getElementById('currentDate');
-        if(dateSpan) {
-            const now = new Date();
-            dateSpan.textContent = now.toLocaleDateString('en-US', { weekday: 'short', year: 'numeric', month: 'short', day: 'numeric' });
-        }
-
-        const kpis = {
-            activeTrips: 18,
-            totalVehicles: 42,
-            activeDrivers: 27,
-            ontimePerformance: 94,
-            maintenanceAlerts: 3,
-            fuelEfficiency: 8.4
-        };
-        document.getElementById('activeTrips').textContent = kpis.activeTrips;
-        document.getElementById('totalVehicles').textContent = kpis.totalVehicles;
-        document.getElementById('activeDrivers').textContent = kpis.activeDrivers;
-        document.getElementById('ontimePerformance').textContent = kpis.ontimePerformance + '%';
-        document.getElementById('maintenanceAlerts').textContent = kpis.maintenanceAlerts;
-        document.getElementById('fuelEfficiency').textContent = kpis.fuelEfficiency + ' mpg';
-
-        const ctx = document.getElementById('tripChart').getContext('2d');
-        let tripChart = new Chart(ctx, {
-            type: 'bar',
-            data: {
-                labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
-                datasets: [{
-                    label: 'Trips',
-                    data: [8, 12, 10, 15, 18, 9, 6],
-                    backgroundColor: '#2563eb',
-                    borderRadius: 6,
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: { legend: { display: false } },
-                scales: { y: { beginAtZero: true, grid: { color: '#e9edf2' } }, x: { grid: { display: false } } }
-            }
-        });
-
-        document.querySelectorAll('.card-actions .btn-sm').forEach(btn => {
-            btn.addEventListener('click', function() {
-                document.querySelectorAll('.card-actions .btn-sm').forEach(b => b.classList.remove('active'));
-                this.classList.add('active');
-                const period = this.dataset.period;
-                let data;
-                if (period === 'week') data = [8,12,10,15,18,9,6];
-                else if (period === 'month') data = [45,52,48,60,55,42,38];
-                else data = [320,380,410,390,420,350,300];
-                tripChart.data.datasets[0].data = data;
-                tripChart.update();
-            });
-        });
-
-        const trips = [
-            { id: 'TR-1024', driver: 'Elena V.', vehicle: 'V-421', status: 'active' },
-            { id: 'TR-1023', driver: 'Marcus R.', vehicle: 'V-218', status: 'completed' },
-            { id: 'TR-1022', driver: 'Sophia L.', vehicle: 'V-093', status: 'pending' },
-            { id: 'TR-1021', driver: 'James K.', vehicle: 'V-507', status: 'active' },
-            { id: 'TR-1020', driver: 'Olivia P.', vehicle: 'V-314', status: 'completed' },
-            { id: 'TR-1019', driver: 'Daniel W.', vehicle: 'V-882', status: 'pending' }
-        ];
-        const tbody = document.getElementById('tripTableBody');
-        if(tbody) {
-            tbody.innerHTML = trips.map(t => `
-                <tr>
-                    <td><strong>${t.id}</strong></td>
-                    <td>${t.driver}</td>
-                    <td>${t.vehicle}</td>
-                    <td><span class="status-badge ${t.status}">${t.status.charAt(0).toUpperCase()+t.status.slice(1)}</span></td>
-                    <td><button class="btn-table">Details</button></td>
-                </tr>
-            `).join('');
-        }
-
-        const drivers = [
-            { name: 'Elena V.', status: 'online', route: 'Route 7A' },
-            { name: 'Marcus R.', status: 'online', route: 'Route 12B' },
-            { name: 'Sophia L.', status: 'away', route: 'Break' },
-            { name: 'James K.', status: 'online', route: 'Route 3C' },
-            { name: 'Olivia P.', status: 'offline', route: 'Off duty' },
-            { name: 'Daniel W.', status: 'online', route: 'Route 9D' }
-        ];
-        const driverList = document.getElementById('driverStatusList');
-        if(driverList) {
-            driverList.innerHTML = drivers.map(d => `
-                <div class="driver-item">
-                    <img src="https://ui-avatars.com/api/?name=${d.name.replace(' ','+')}&background=2d4059&color=fff&size=40" alt="${d.name}" />
-                    <div class="info"><div class="name">${d.name}</div><div class="status-text"><span class="driver-status-dot ${d.status}"></span>${d.route}</div></div>
-                    <span style="font-size:12px; font-weight:500; color:#475569;">${d.status}</span>
+        <div class="sidebar-footer">
+            <div class="user-card">
+                <img src="https://ui-avatars.com/api/?name=John+Administrator&background=2d4059&color=fff&size=50" alt="User" />
+                <div class="user-info">
+                    <p class="user-name">John Admin</p>
+                    <p class="user-role">Operations Manager</p>
                 </div>
-            `).join('');
-        }
+                <button class="logout-btn" title="Logout">
+                    <i class="fas fa-sign-out-alt"></i>
+                </button>
+            </div>
+        </div>
+    </aside>
 
-        const utilization = [
-            { label: 'Bus 421', value: 82 },
-            { label: 'Bus 218', value: 65 },
-            { label: 'Bus 093', value: 93 },
-            { label: 'Bus 507', value: 44 },
-            { label: 'Bus 314', value: 71 }
-        ];
-        const utilContainer = document.getElementById('utilizationBars');
-        if(utilContainer) {
-            utilContainer.innerHTML = utilization.map(u => {
-                let cls = 'high';
-                if (u.value < 50) cls = 'low';
-                else if (u.value < 75) cls = 'medium';
-                return `
-                    <div class="util-item">
-                        <span class="label">${u.label}</span>
-                        <div class="util-track"><div class="util-fill ${cls}" style="width:${u.value}%;"></div></div>
-                        <span class="perc">${u.value}%</span>
+    <main class="main-content">
+        <header class="top-header">
+            <div class="header-left">
+                <h1 class="page-title">Dashboard</h1>
+                <p class="page-subtitle">Real-time fleet overview &amp; analytics</p>
+            </div>
+            <div class="header-right">
+                <div class="date-display" id="currentDate">
+                    <i class="far fa-calendar-alt"></i>
+                    <span>Loading...</span>
+                </div>
+                <div class="header-actions">
+                    <button class="btn-icon" title="Notifications">
+                        <i class="fas fa-bell"></i>
+                        <span class="notification-dot"></span>
+                    </button>
+                    <button class="btn-icon" title="Messages">
+                        <i class="fas fa-envelope"></i>
+                    </button>
+                    <button class="btn-primary">
+                        <i class="fas fa-plus"></i>
+                        New Trip
+                    </button>
+                    <button class="btn-outline">
+                        <i class="fas fa-download"></i>
+                        Export
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <section class="kpi-grid">
+            <div class="kpi-card">
+                <div class="kpi-icon blue">
+                    <i class="fas fa-route"></i>
+                </div>
+                <div class="kpi-content">
+                    <span class="kpi-label">Active Trips</span>
+                    <div class="kpi-value-group">
+                        <span class="kpi-value" id="activeTrips">0</span>
+                        <span class="kpi-change positive">
+                            <i class="fas fa-arrow-up"></i> 12%
+                        </span>
                     </div>
-                `;
-            }).join('');
-        }
-
-        const maintenance = [
-            { title: 'Oil Change', vehicle: 'V-421', date: 'May 22, 2026' },
-            { title: 'Brake Inspection', vehicle: 'V-093', date: 'May 24, 2026' },
-            { title: 'Tire Rotation', vehicle: 'V-218', date: 'May 28, 2026' },
-            { title: 'Engine Diagnostic', vehicle: 'V-507', date: 'Jun 02, 2026' }
-        ];
-        const maintGrid = document.getElementById('maintenanceGrid');
-        if(maintGrid) {
-            maintGrid.innerHTML = maintenance.map(m => `
-                <div class="maintenance-item" style="border-left-color: #2563eb;">
-                    <div class="title">${m.title}</div>
-                    <div class="desc">${m.vehicle}</div>
-                    <div class="date"><i class="far fa-calendar-alt" style="margin-right:4px;"></i>${m.date}</div>
                 </div>
-            `).join('');
-        }
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-icon green">
+                    <i class="fas fa-truck"></i>
+                </div>
+                <div class="kpi-content">
+                    <span class="kpi-label">Total Vehicles</span>
+                    <div class="kpi-value-group">
+                        <span class="kpi-value" id="totalVehicles">0</span>
+                        <span class="kpi-change positive">
+                            <i class="fas fa-arrow-up"></i> 5%
+                        </span>
+                    </div>
+                </div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-icon orange">
+                    <i class="fas fa-user-check"></i>
+                </div>
+                <div class="kpi-content">
+                    <span class="kpi-label">Active Drivers</span>
+                    <div class="kpi-value-group">
+                        <span class="kpi-value" id="activeDrivers">0</span>
+                        <span class="kpi-change positive">
+                            <i class="fas fa-arrow-up"></i> 8%
+                        </span>
+                    </div>
+                </div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-icon purple">
+                    <i class="fas fa-clock"></i>
+                </div>
+                <div class="kpi-content">
+                    <span class="kpi-label">On-Time Performance</span>
+                    <div class="kpi-value-group">
+                        <span class="kpi-value" id="ontimePerformance">0%</span>
+                        <span class="kpi-change positive">
+                            <i class="fas fa-arrow-up"></i> 3%
+                        </span>
+                    </div>
+                </div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-icon red">
+                    <i class="fas fa-exclamation-triangle"></i>
+                </div>
+                <div class="kpi-content">
+                    <span class="kpi-label">Maintenance Alerts</span>
+                    <div class="kpi-value-group">
+                        <span class="kpi-value" id="maintenanceAlerts">0</span>
+                        <span class="kpi-change negative">
+                            <i class="fas fa-arrow-up"></i> 2
+                        </span>
+                    </div>
+                </div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-icon teal">
+                    <i class="fas fa-gas-pump"></i>
+                </div>
+                <div class="kpi-content">
+                    <span class="kpi-label">Fuel Efficiency</span>
+                    <div class="kpi-value-group">
+                        <span class="kpi-value" id="fuelEfficiency">0</span>
+                        <span class="kpi-change positive">
+                            <i class="fas fa-arrow-up"></i> 4%
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </section>
 
-        const toggleBtn = document.getElementById('sidebarToggle');
-        const sidebar = document.getElementById('sidebar');
-        if(toggleBtn && sidebar) {
-            toggleBtn.addEventListener('click', function(e) {
-                e.preventDefault();
-                sidebar.classList.toggle('collapsed');
-                if (sidebar.classList.contains('collapsed')) {
-                    sidebar.style.width = '80px';
-                    document.querySelectorAll('.sidebar .brand-text, .sidebar .nav-item span, .sidebar .user-info, .sidebar .nav-badge, .sidebar .sidebar-toggle i').forEach(el => el.style.display = 'none');
-                } else {
-                    sidebar.style.width = '280px';
-                    document.querySelectorAll('.sidebar .brand-text, .sidebar .nav-item span, .sidebar .user-info, .sidebar .nav-badge, .sidebar .sidebar-toggle i').forEach(el => el.style.display = '');
-                }
-            });
-        }
+        <section class="dashboard-grid">
+            <div class="card chart-card">
+                <div class="card-header">
+                    <div>
+                        <h3><i class="fas fa-chart-bar"></i> Trip Activity</h3>
+                        <span class="card-subtitle">Last 7 days</span>
+                    </div>
+                    <div class="card-actions">
+                        <button class="btn-sm active" data-period="week">Week</button>
+                        <button class="btn-sm" data-period="month">Month</button>
+                        <button class="btn-sm" data-period="year">Year</button>
+                    </div>
+                </div>
+                <div class="chart-container">
+                    <canvas id="tripChart"></canvas>
+                </div>
+            </div>
 
-        console.log('Dashboard ready.');
-    })();
-</script>
+            <div class="card table-card">
+                <div class="card-header">
+                    <div>
+                        <h3><i class="fas fa-list-ul"></i> Recent Trips</h3>
+                        <span class="card-subtitle">Latest 6 trips</span>
+                    </div>
+                    <a href="#" class="link-more">View All <i class="fas fa-arrow-right"></i></a>
+                </div>
+                <div class="table-wrapper">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Trip ID</th>
+                                <th>Driver</th>
+                                <th>Vehicle</th>
+                                <th>Status</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tripTableBody">
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="card driver-card">
+                <div class="card-header">
+                    <div>
+                        <h3><i class="fas fa-user-clock"></i> Driver Status</h3>
+                        <span class="card-subtitle">Live updates</span>
+                    </div>
+                    <span class="live-badge">
+                        <span class="pulse-dot"></span> LIVE
+                    </span>
+                </div>
+                <div class="driver-list-container" id="driverStatusList">
+                </div>
+            </div>
+
+            <div class="card utilization-card">
+                <div class="card-header">
+                    <div>
+                        <h3><i class="fas fa-chart-simple"></i> Vehicle Utilization</h3>
+                        <span class="card-subtitle">Current fleet usage</span>
+                    </div>
+                </div>
+                <div class="utilization-bars" id="utilizationBars">
+                </div>
+            </div>
+        </section>
+
+        <section class="bottom-section">
+            <div class="card maintenance-card">
+                <div class="card-header">
+                    <div>
+                        <h3><i class="fas fa-toolbox"></i> Upcoming Maintenance</h3>
+                        <span class="card-subtitle">Scheduled services</span>
+                    </div>
+                    <a href="#" class="link-more">View All <i class="fas fa-arrow-right"></i></a>
+                </div>
+                <div class="maintenance-grid" id="maintenanceGrid">
+                </div>
+            </div>
+
+            <div class="card quick-actions-card">
+                <div class="card-header">
+                    <h3><i class="fas fa-bolt"></i> Quick Actions</h3>
+                </div>
+                <div class="quick-actions-grid">
+                    <button class="quick-action-btn">
+                        <i class="fas fa-user-plus"></i>
+                        <span>Add Driver</span>
+                    </button>
+                    <button class="quick-action-btn">
+                        <i class="fas fa-truck"></i>
+                        <span>Add Vehicle</span>
+                    </button>
+                    <button class="quick-action-btn">
+                        <i class="fas fa-route"></i>
+                        <span>Schedule Trip</span>
+                    </button>
+                    <button class="quick-action-btn">
+                        <i class="fas fa-file-alt"></i>
+                        <span>Generate Report</span>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <footer class="dashboard-footer">
+            <span>&copy; 2026 TransitOps - Fleet Management System</span>
+            <span class="footer-divider">|</span>
+            <span><i class="fas fa-circle" style="color: #22c55e; font-size: 8px;"></i> All systems operational</span>
+            <span class="footer-divider">|</span>
+            <span>v2.4.1</span>
+        </footer>
+    </main>
+
+    <script src="dashboard.js"></script>
 </body>
 </html>
