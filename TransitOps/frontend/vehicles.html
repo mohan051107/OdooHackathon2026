@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>TransitOps · Vehicles</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+    <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+    <aside class="sidebar">
+        <div class="sidebar-brand"><i class="fas fa-truck"></i> FleetGo</div>
+        <nav>
+            <a href="dashboard.html" class="nav-item"><i class="fas fa-chart-pie"></i> Dashboard</a>
+            <a href="vehicles.html" class="nav-item active"><i class="fas fa-vehicle"></i> Vehicles</a>
+            <a href="drivers.html" class="nav-item"><i class="fas fa-id-card"></i> Drivers</a>
+            <a href="trips.html" class="nav-item"><i class="fas fa-route"></i> Trips</a>
+        </nav>
+        <div class="sidebar-footer">
+            <i class="fas fa-shield-alt"></i>
+            <span id="sidebarUser">Fleet Manager</span>
+        </div>
+    </aside>
+
+    <main class="main">
+        <div class="top-bar">
+            <div class="page-title">
+                <h1>Vehicle Registry</h1>
+                <span>manage your fleet assets</span>
+            </div>
+            <div class="user-profile">
+                <i class="fas fa-user-circle"></i>
+                <span id="userName">Fleet Manager</span>
+                <span class="badge-role"><i class="fas fa-key"></i> <span id="userRole">Admin</span></span>
+            </div>
+        </div>
+
+        <div class="stats-grid" id="statsGrid">
+            <div class="stat-card"><div class="stat-label">Total</div><div class="stat-value" id="statTotal">0</div></div>
+            <div class="stat-card"><div class="stat-label">Available</div><div class="stat-value" id="statAvailable">0 <span class="stat-icon"><i class="fas fa-check-circle" style="color:#0b6e4f;"></i></span></div></div>
+            <div class="stat-card"><div class="stat-label">On Trip</div><div class="stat-value" id="statOnTrip">0 <span class="stat-icon"><i class="fas fa-route" style="color:#8b6200;"></i></span></div></div>
+            <div class="stat-card"><div class="stat-label">In Shop</div><div class="stat-value" id="statInShop">0 <span class="stat-icon"><i class="fas fa-tools" style="color:#ac3f32;"></i></span></div></div>
+            <div class="stat-card"><div class="stat-label">Retired</div><div class="stat-value" id="statRetired">0 <span class="stat-icon"><i class="fas fa-ban" style="color:#4e667c;"></i></span></div></div>
+        </div>
+
+        <div class="toolbar">
+            <div class="search-wrap">
+                <i class="fas fa-search"></i>
+                <input type="text" id="searchInput" placeholder="Search by registration, name, or type…">
+            </div>
+            <div class="filter-group">
+                <label><i class="fas fa-filter"></i></label>
+                <select id="filterStatus">
+                    <option value="all">All Status</option>
+                    <option value="available">Available</option>
+                    <option value="ontrip">On Trip</option>
+                    <option value="inshop">In Shop</option>
+                    <option value="retired">Retired</option>
+                </select>
+            </div>
+            <div class="filter-group">
+                <select id="filterType">
+                    <option value="all">All Types</option>
+                    <option value="Box Truck">Box Truck</option>
+                    <option value="Van">Van</option>
+                    <option value="Trailer">Trailer</option>
+                    <option value="Sedan">Sedan</option>
+                    <option value="SUV">SUV</option>
+                </select>
+            </div>
+            <button class="btn-primary" id="addVehicleBtn"><i class="fas fa-plus"></i> Add Vehicle</button>
+        </div>
+
+        <div class="section-card">
+            <div class="table-wrap">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Registration</th>
+                            <th>Name / Model</th>
+                            <th>Type</th>
+                            <th>Load (kg)</th>
+                            <th>Odometer</th>
+                            <th>Status</th>
+                            <th style="text-align:right;">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="vehicleTableBody"></tbody>
+                </table>
+            </div>
+            <div id="emptyState" class="empty-state" style="display:none;">
+                <i class="fas fa-truck"></i>
+                <p>No vehicles found. Click <strong>Add Vehicle</strong> to register your first asset.</p>
+            </div>
+        </div>
+    </main>
+
+    <div class="toast" id="toast"></div>
+
+    <div class="modal-overlay" id="modalOverlay">
+        <div class="modal-box">
+            <h3 id="modalTitle">Register Vehicle</h3>
+            <p class="modal-sub" id="modalSub">Enter the vehicle details below.</p>
+            <form id="vehicleForm" novalidate>
+                <input type="hidden" id="editId" value="">
+                <div class="form-group">
+                    <label>Registration Number <span class="required">*</span></label>
+                    <input type="text" id="fRegNumber" placeholder="e.g. KL-07-AB-1234" required>
+                    <div class="validation-error" id="regError">This registration number is already in use.</div>
+                </div>
+                <div class="form-group">
+                    <label>Vehicle Name / Model <span class="required">*</span></label>
+                    <input type="text" id="fName" placeholder="e.g. Ford Transit 2024" required>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Type <span class="required">*</span></label>
+                        <select id="fType" required>
+                            <option value="Box Truck">Box Truck</option>
+                            <option value="Van" selected>Van</option>
+                            <option value="Trailer">Trailer</option>
+                            <option value="Sedan">Sedan</option>
+                            <option value="SUV">SUV</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Max Load (kg) <span class="required">*</span></label>
+                        <input type="number" id="fCapacity" placeholder="e.g. 500" min="1" required>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Odometer (km)</label>
+                        <input type="number" id="fOdometer" placeholder="e.g. 12450" min="0" value="0">
+                    </div>
+                    <div class="form-group">
+                        <label>Acquisition Cost ($)</label>
+                        <input type="number" id="fCost" placeholder="e.g. 45000" min="0" value="0">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Status</label>
+                    <select id="fStatus">
+                        <option value="available">Available</option>
+                        <option value="ontrip">On Trip</option>
+                        <option value="inshop">In Shop</option>
+                        <option value="retired">Retired</option>
+                    </select>
+                </div>
+                <div class="btn-row">
+                    <button type="button" class="btn-secondary-modal" id="cancelModalBtn">Cancel</button>
+                    <button type="submit" class="btn-primary-modal" id="modalSaveBtn">Save Vehicle</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="js/vehicles.js"></script>
+</body>
+</html>
